@@ -2,11 +2,13 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>2026 東京六日精緻遊</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="slowpoke.png">
     <link rel="apple-touch-icon" href="slowpoke.png">
 
@@ -14,247 +16,427 @@
         :root {
             --primary: #007AFF;
             --primary-dark: #005ecb;
+            --primary-soft: rgba(0, 122, 255, 0.1);
             --secondary: #FF2D55;
             --bg: #F2F2F7;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --text-main: #000000;
+            --card-bg: rgba(255, 255, 255, 0.78);
+            --nav-bg: rgba(242, 242, 247, 0.82);
+            --chip-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1C1C1E;
             --text-sub: #8E8E93;
-            --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+            --line: rgba(0, 0, 0, 0.07);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.45);
+            --shadow-card: 0 10px 30px -12px rgba(20, 30, 60, 0.14);
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            interpolate-size: allow-keywords; /* 讓 details 展開高度可以有動畫（支援的瀏覽器） */
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #000000;
-                --card-bg: rgba(28, 28, 30, 0.75);
+                --card-bg: rgba(28, 28, 30, 0.8);
+                --nav-bg: rgba(10, 10, 12, 0.82);
+                --chip-bg: rgba(44, 44, 46, 0.9);
                 --text-main: #FFFFFF;
                 --text-sub: #98989D;
-                --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+                --line: rgba(255, 255, 255, 0.12);
+                --glass-border: 1px solid rgba(255, 255, 255, 0.14);
+                --shadow-card: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+                --primary-soft: rgba(10, 132, 255, 0.18);
             }
         }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-            outline: none;
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        body { 
+        html { scroll-behavior: smooth; }
+
+        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
             background-color: var(--bg);
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 0; 
-            padding-bottom: 100px; 
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            padding-bottom: calc(90px + env(safe-area-inset-bottom));
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        a:focus-visible, summary:focus-visible, button:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 3px;
+            border-radius: 8px;
         }
 
         .container { max-width: 600px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10; }
-        
-        header { 
+
+        /* ===== 頁首 ===== */
+        header {
             position: relative;
-            height: 45vh;
-            min-height: 350px;
-            /* 行程頁的橫式照片 */
+            height: 46vh;
+            min-height: 360px;
             background-image: url('./photo.jpg');
             background-size: cover;
             background-position: center;
-            border-radius: 0 0 40px 40px;
+            border-radius: 0 0 36px 36px;
             overflow: hidden;
             margin-bottom: -60px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.22);
         }
 
         .header-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.68) 100%);
         }
+
+        .back-btn {
+            position: absolute;
+            left: max(16px, env(safe-area-inset-left));
+            top: max(16px, env(safe-area-inset-top));
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.32);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: white;
+            font-size: 1.25rem;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+            transition: transform 0.2s var(--ease-out), background 0.2s ease;
+        }
+        .back-btn:active { transform: scale(0.9); background: rgba(0,0,0,0.5); }
+        @media (hover: hover) { .back-btn:hover { background: rgba(0,0,0,0.5); } }
 
         .header-content {
             position: absolute;
-            bottom: 80px;
+            bottom: 84px;
             left: 20px;
             right: 20px;
             text-align: left;
             color: white;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+            animation: fadeIn 0.8s var(--ease-out) backwards;
         }
 
-        h1 { margin: 0; font-size: 2.2rem; font-weight: 900; letter-spacing: -0.5px; line-height: 1.2; }
-        .subtitle { font-weight: 600; opacity: 0.9; margin-top: 8px; font-size: 1.1rem; display: flex; align-items: center; gap: 5px;}
-        
+        h1 {
+            margin: 0;
+            font-size: clamp(1.9rem, 7vw, 2.4rem);
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+        }
+
+        .subtitle {
+            font-weight: 600;
+            opacity: 0.92;
+            margin-top: 8px;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         .hotel-pill {
             display: inline-flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.25);
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.22);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 10px 18px;
             border-radius: 30px;
-            margin-top: 20px;
+            margin-top: 18px;
             font-size: 0.9rem;
             font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.45);
             text-decoration: none;
             color: white;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s var(--ease-out), background 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            max-width: 100%;
         }
         .hotel-pill:active { transform: scale(0.96); background: rgba(255, 255, 255, 0.4); }
+        @media (hover: hover) { .hotel-pill:hover { background: rgba(255, 255, 255, 0.35); } }
 
-        .quick-actions { 
-            display: flex; 
-            gap: 12px; 
-            justify-content: space-between; 
-            margin-bottom: 30px; 
-            padding: 10px 0;
+        /* ===== 置頂日期導覽 ===== */
+        .day-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px) saturate(1.6);
+            -webkit-backdrop-filter: blur(20px) saturate(1.6);
+            border-bottom: 1px solid var(--line);
+            margin: 24px -20px 22px;
+            padding: 10px max(20px, env(safe-area-inset-left));
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        
-        .action-btn { 
+        .day-nav::-webkit-scrollbar { display: none; }
+
+        .day-chip {
+            flex-shrink: 0;
+            border: 1px solid var(--line);
+            background: var(--chip-bg);
+            color: var(--text-main);
+            font: inherit;
+            font-size: 0.88rem;
+            font-weight: 700;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.2s var(--ease-out);
+        }
+        .day-chip:active { transform: scale(0.94); }
+        .day-chip.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+        }
+
+        /* ===== 快速工具列 ===== */
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-bottom: 26px;
+        }
+
+        .action-btn {
             flex: 1;
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            color: var(--primary); 
-            padding: 14px; 
-            border-radius: 18px; 
-            text-decoration: none; 
-            font-size: 0.95rem; 
-            font-weight: 600; 
+            color: var(--primary);
+            padding: 14px 8px;
+            border-radius: 18px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
             text-align: center;
-            box-shadow: 0 8px 20px -5px rgba(0,0,0,0.1);
-            transition: all 0.2s;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s var(--ease-out), box-shadow 0.2s ease;
             border: var(--glass-border);
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            animation: slideUp 0.55s var(--ease-out) backwards;
         }
-        .action-btn span { font-size: 1.4rem; }
-        .action-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.5); }
+        .action-btn:nth-child(1) { animation-delay: 0.05s; }
+        .action-btn:nth-child(2) { animation-delay: 0.1s; }
+        .action-btn:nth-child(3) { animation-delay: 0.15s; }
+        .action-btn span { font-size: 1.5rem; line-height: 1; }
+        .action-btn:active { transform: scale(0.95); }
+        @media (hover: hover) {
+            .action-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -10px rgba(20, 30, 60, 0.22); }
+        }
 
-        .alert-card { 
-            background: rgba(255, 59, 48, 0.1);
+        /* ===== 提醒卡 ===== */
+        .alert-card {
+            background: rgba(255, 45, 85, 0.09);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-left: none;
-            border-radius: 18px; 
-            padding: 18px; 
-            margin-bottom: 25px; 
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-bottom: 26px;
             color: var(--secondary);
-            border: var(--glass-border);
-            box-shadow: 0 10px 25px -10px rgba(255, 45, 85, 0.3);
-            animation: slideUp 0.5s ease backwards;
+            border: 1px solid rgba(255, 45, 85, 0.22);
+            box-shadow: 0 10px 25px -12px rgba(255, 45, 85, 0.35);
+            animation: slideUp 0.55s var(--ease-out) 0.2s backwards;
         }
-        
-        details { 
-            background: var(--card-bg); 
+        .alert-title { font-weight: 800; margin-bottom: 8px; font-size: 1.05rem; }
+        .alert-body { font-size: 0.95rem; opacity: 0.92; line-height: 1.5; }
+
+        /* ===== 每日卡片 ===== */
+        details {
+            background: var(--card-bg);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border-radius: 22px; 
-            margin-bottom: 18px; 
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-            overflow: hidden; 
+            border-radius: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
             border: var(--glass-border);
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            transform: translateZ(0);
+            animation: slideUp 0.6s var(--ease-out) backwards;
+            scroll-margin-top: 76px; /* 避免捲動定位被置頂導覽遮住 */
+            transition: box-shadow 0.3s ease;
         }
-        
-        details:nth-of-type(1) { animation-delay: 0.1s; }
-        details:nth-of-type(2) { animation-delay: 0.2s; }
-        details:nth-of-type(3) { animation-delay: 0.3s; }
-        details:nth-of-type(4) { animation-delay: 0.4s; }
-        details:nth-of-type(5) { animation-delay: 0.5s; }
+        details[open] { box-shadow: 0 18px 40px -14px rgba(20, 30, 60, 0.2); }
+
+        details:nth-of-type(1) { animation-delay: 0.25s; }
+        details:nth-of-type(2) { animation-delay: 0.32s; }
+        details:nth-of-type(3) { animation-delay: 0.39s; }
+        details:nth-of-type(4) { animation-delay: 0.46s; }
+        details:nth-of-type(5) { animation-delay: 0.53s; }
         details:nth-of-type(6) { animation-delay: 0.6s; }
 
-        summary { 
-            padding: 22px; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            list-style: none; 
+        /* 展開內容的高度動畫（支援 ::details-content 的瀏覽器才會生效，其餘正常開合） */
+        details::details-content {
+            block-size: 0;
+            overflow: clip;
+            transition: block-size 0.4s var(--ease-out), content-visibility 0.4s allow-discrete;
+        }
+        details[open]::details-content { block-size: auto; }
+
+        summary {
+            padding: 20px 22px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            list-style: none;
             position: relative;
             transition: background 0.2s;
         }
         summary:active { background-color: rgba(0,0,0,0.05); }
         summary::-webkit-details-marker { display: none; }
 
-        .day-header { display: flex; flex-direction: column; gap: 4px; }
-        .day-title { font-size: 1.2rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px;}
-        .day-date { font-size: 0.9rem; color: var(--text-sub); font-weight: 600; }
-        
+        .day-header { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+        .day-title {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.3px;
+            font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+            line-height: 1.35;
+        }
+        .day-date {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
         summary::after {
             content: '↓';
-            display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
             background: rgba(0,0,0,0.05);
             border-radius: 50%;
-            font-size: 1.2rem; color: var(--text-sub);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.15rem;
+            color: var(--text-sub);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 700;
         }
         @media (prefers-color-scheme: dark) { summary::after { background: rgba(255,255,255,0.1); } }
 
-        details[open] summary::after { transform: rotate(180deg); background: var(--primary); color: white; }
-        
-        .day-content { padding: 10px 24px 30px 24px; }
+        details[open] summary::after { transform: rotate(180deg); background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4); }
 
-        .timeline { 
-            position: relative; 
-            padding-left: 28px; 
-        }
+        .day-content { padding: 6px 24px 28px 24px; }
+
+        /* ===== 時間軸 ===== */
+        .timeline { position: relative; padding-left: 30px; }
         .timeline::before {
-            content: ''; position: absolute; left: 7px; top: 10px; bottom: 0px;
-            width: 3px; background: rgba(0,0,0,0.06); border-radius: 3px;
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 12px;
+            bottom: 6px;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary) 0%, var(--line) 65%);
+            opacity: 0.35;
+            border-radius: 3px;
         }
-        @media (prefers-color-scheme: dark) { .timeline::before { background: rgba(255,255,255,0.1); } }
 
-        .event { margin-bottom: 35px; position: relative; }
-        .event:last-child { margin-bottom: 10px; }
-        
+        .event { margin-bottom: 30px; position: relative; }
+        .event:last-child { margin-bottom: 8px; }
+
         .event-dot {
-            position: absolute; left: -27px; top: 2px;
-            width: 16px; height: 16px;
+            position: absolute;
+            left: -29px;
+            top: 3px;
+            width: 16px;
+            height: 16px;
             background: var(--primary);
             border: 3px solid var(--card-bg);
-            border-radius: 50%; z-index: 2;
+            border-radius: 50%;
+            z-index: 2;
             box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
-            animation: pulse 3s infinite ease-in-out;
         }
+        /* 只讓每張卡的第一個節點呼吸閃爍，減少視覺噪音 */
+        .event:first-child .event-dot { animation: pulse 3s infinite ease-in-out; }
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(0, 122, 255, 0); }
+            0%   { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
+            70%  { box-shadow: 0 0 0 8px rgba(0, 122, 255, 0); }
             100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
         }
 
-        .time { 
-            font-size: 0.9rem; font-weight: 700; color: var(--primary); 
-            margin-bottom: 4px; display: block;
+        .time {
+            display: inline-block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-soft);
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+            font-variant-numeric: tabular-nums;
         }
-        
-        .activity { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
-        .note { font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; }
+
+        .activity { font-size: 1.08rem; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+        .note { font-size: 0.95rem; color: var(--text-sub); line-height: 1.7; }
 
         .map-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(0, 122, 255, 0.1); color: var(--primary);
-            text-decoration: none; padding: 8px 14px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 600; margin-top: 10px;
-            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+            margin-right: 6px;
+            transition: transform 0.2s var(--ease-out), background 0.2s ease;
         }
-        .map-btn:active { transform: scale(0.96); background: rgba(0, 122, 255, 0.2); }
+        .map-btn:active { transform: scale(0.96); background: rgba(0, 122, 255, 0.22); }
+        @media (hover: hover) { .map-btn:hover { background: rgba(0, 122, 255, 0.18); } }
 
         .highlight { color: var(--secondary); font-weight: 800; }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(28px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="index.html" style="position:absolute; left:20px; top:20px; text-decoration:none; font-size:1.8rem; z-index:99; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">🔙</a>
-    
+    <a href="index.html" class="back-btn" aria-label="回到封面">←</a>
+
     <div class="header-overlay"></div>
     <div class="header-content">
         <h1>🇯🇵 東京六天五夜</h1>
@@ -266,6 +448,15 @@
 </header>
 
 <div class="container" style="margin-top: -40px;">
+
+    <nav class="day-nav" aria-label="行程日期導覽">
+        <button class="day-chip active" data-target="day1">Day 1</button>
+        <button class="day-chip" data-target="day2">Day 2</button>
+        <button class="day-chip" data-target="day3">Day 3</button>
+        <button class="day-chip" data-target="day4">Day 4</button>
+        <button class="day-chip" data-target="day5">Day 5</button>
+        <button class="day-chip" data-target="day6">Day 6</button>
+    </nav>
 
     <div class="quick-actions">
         <a href="https://www.google.com/maps" target="_blank" class="action-btn">
@@ -280,11 +471,11 @@
     </div>
 
     <div class="alert-card">
-        <div style="font-weight: 800; margin-bottom: 8px; font-size: 1.05rem;">⚡ 記得搶票 (設定行事曆！)</div>
-        <div style="font-size: 0.95rem; opacity: 0.9;">📅 <strong>12/27 (六)</strong>：Shibuya Sky 門票</div>
+        <div class="alert-title">⚡ 記得搶票 (設定行事曆！)</div>
+        <div class="alert-body">📅 <strong>12/27 (六)</strong>：Shibuya Sky 門票</div>
     </div>
 
-    <details open>
+    <details id="day1" open>
         <summary>
             <div class="day-header">
                 <span class="day-title">Day 1 小晴任之旅第一天！</span>
@@ -324,7 +515,7 @@
         </div>
     </details>
 
-    <details>
+    <details id="day2">
         <summary>
             <div class="day-header">
                 <span class="day-title">Day 2 去鎌倉囉！</span>
@@ -379,7 +570,7 @@
         </div>
     </details>
 
-    <details>
+    <details id="day3">
         <summary>
             <div class="day-header">
                 <span class="day-title">Day 3 渉谷呆呆獸尋根之旅~</span>
@@ -420,7 +611,7 @@
         </div>
     </details>
 
-    <details>
+    <details id="day4">
         <summary>
             <div class="day-header">
                 <span class="day-title">Day 4 富士山！</span>
@@ -431,7 +622,7 @@
             <div class="timeline">
                 <div class="event">
                     <div class="event-dot" style="background: var(--secondary); box-shadow: 0 2px 8px rgba(255, 45, 85, 0.4);"></div>
-                    <span class="time" style="color: var(--secondary);">⚠️ 日本國定假日</span>
+                    <span class="time" style="color: var(--secondary); background: rgba(255, 45, 85, 0.1);">⚠️ 日本國定假日</span>
                     <div class="activity">成人之日 (人潮預警)</div>
                 </div>
                 <div class="event">
@@ -467,7 +658,7 @@
         </div>
     </details>
 
-    <details>
+    <details id="day5">
         <summary>
             <div class="day-header">
                 <span class="day-title">Day 5 迪士尼樂園</span>
@@ -502,7 +693,7 @@
         </div>
     </details>
 
-    <details>
+    <details id="day6">
         <summary>
             <div class="day-header">
                 <span class="day-title">Day 6 開心回家囉！</span>
@@ -531,5 +722,38 @@
     </details>
 
 </div>
+
+<script>
+    // 日期導覽：點擊晶片 → 展開該日卡片並平滑捲動過去
+    const chips = document.querySelectorAll('.day-chip');
+    const days = document.querySelectorAll('details[id^="day"]');
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const target = document.getElementById(chip.dataset.target);
+            if (!target) return;
+            target.open = true;
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // 捲動時同步高亮目前所在的日期晶片
+    const setActive = (id) => {
+        chips.forEach(c => c.classList.toggle('active', c.dataset.target === id));
+    };
+
+    if ('IntersectionObserver' in window) {
+        const visible = new Map();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+            let bestId = null, bestRatio = 0;
+            visible.forEach((ratio, id) => {
+                if (ratio > bestRatio) { bestRatio = ratio; bestId = id; }
+            });
+            if (bestId) setActive(bestId);
+        }, { rootMargin: '-70px 0px -40% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+        days.forEach(d => observer.observe(d));
+    }
+</script>
 </body>
 </html>
