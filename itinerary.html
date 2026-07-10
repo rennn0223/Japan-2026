@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#F5EFE4" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#151318" media="(prefers-color-scheme: dark)">
     <title>2026 東京六日精緻遊</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,35 +14,36 @@
 
     <style>
         :root {
-            --primary: #007AFF;
-            --primary-dark: #005ecb;
-            --primary-soft: rgba(0, 122, 255, 0.1);
-            --secondary: #FF2D55;
-            --bg: #F2F2F7;
-            --card-bg: rgba(255, 255, 255, 0.78);
-            --nav-bg: rgba(242, 242, 247, 0.82);
-            --chip-bg: rgba(255, 255, 255, 0.9);
-            --text-main: #1C1C1E;
-            --text-sub: #8E8E93;
-            --line: rgba(0, 0, 0, 0.07);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.45);
-            --shadow-card: 0 10px 30px -12px rgba(20, 30, 60, 0.14);
+            --washi: #F5EFE4;        /* 和紙底色 */
+            --paper: #FFFDF8;        /* 紙卡 */
+            --ink: #2E2A25;          /* 墨色 */
+            --sub: #8A8378;
+            --vermillion: #C4453C;   /* 朱紅 */
+            --vermillion-soft: rgba(196, 69, 60, 0.09);
+            --gold: #A8862B;         /* 節日用的金茶色 */
+            --gold-soft: rgba(168, 134, 43, 0.12);
+            --line: rgba(46, 42, 37, 0.1);
+            --dot: rgba(60, 50, 40, 0.07);
+            --nav-bg: rgba(245, 239, 228, 0.88);
+            --shadow-card: 0 8px 24px -10px rgba(46, 42, 37, 0.18);
             --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
             interpolate-size: allow-keywords; /* 讓 details 展開高度可以有動畫（支援的瀏覽器） */
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #000000;
-                --card-bg: rgba(28, 28, 30, 0.8);
-                --nav-bg: rgba(10, 10, 12, 0.82);
-                --chip-bg: rgba(44, 44, 46, 0.9);
-                --text-main: #FFFFFF;
-                --text-sub: #98989D;
+                --washi: #151318;
+                --paper: #211E24;
+                --ink: #F2EDE3;
+                --sub: #9A948A;
+                --vermillion: #E06A5E;
+                --vermillion-soft: rgba(224, 106, 94, 0.14);
+                --gold: #CBA84D;
+                --gold-soft: rgba(203, 168, 77, 0.16);
                 --line: rgba(255, 255, 255, 0.12);
-                --glass-border: 1px solid rgba(255, 255, 255, 0.14);
-                --shadow-card: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
-                --primary-soft: rgba(10, 132, 255, 0.18);
+                --dot: rgba(255, 255, 255, 0.05);
+                --nav-bg: rgba(21, 19, 24, 0.88);
+                --shadow-card: 0 8px 24px -10px rgba(0, 0, 0, 0.55);
             }
         }
 
@@ -54,9 +55,12 @@
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
+            font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+            /* 和紙質感：底色 + 細點紋 */
+            background-color: var(--washi);
+            background-image: radial-gradient(var(--dot) 1px, transparent 1.3px);
+            background-size: 20px 20px;
+            color: var(--ink);
             margin: 0;
             padding: 0;
             padding-bottom: calc(90px + env(safe-area-inset-bottom));
@@ -65,31 +69,29 @@
         }
 
         a:focus-visible, summary:focus-visible, button:focus-visible {
-            outline: 3px solid var(--primary);
+            outline: 3px solid var(--vermillion);
             outline-offset: 3px;
             border-radius: 8px;
         }
 
         .container { max-width: 600px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10; }
 
-        /* ===== 頁首 ===== */
+        /* ===== 頁首：相簿風照片 ===== */
         header {
             position: relative;
-            height: 46vh;
-            min-height: 360px;
+            height: 44vh;
+            min-height: 340px;
             background-image: url('./photo.jpg');
             background-size: cover;
             background-position: center;
-            border-radius: 0 0 36px 36px;
             overflow: hidden;
-            margin-bottom: -60px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.22);
+            border-bottom: 5px solid var(--vermillion);
         }
 
         .header-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.68) 100%);
+            background: linear-gradient(to bottom, rgba(30,20,15,0.3) 0%, rgba(30,20,15,0.05) 40%, rgba(30,20,15,0.7) 100%);
         }
 
         .back-btn {
@@ -103,44 +105,42 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.32);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255,255,255,0.35);
-            color: white;
-            font-size: 1.25rem;
+            background: var(--paper);
+            border: 2px solid var(--vermillion);
+            color: var(--vermillion);
+            font-size: 1.2rem;
+            font-weight: 700;
             text-decoration: none;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-            transition: transform 0.2s var(--ease-out), background 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            transition: transform 0.2s var(--ease-out);
         }
-        .back-btn:active { transform: scale(0.9); background: rgba(0,0,0,0.5); }
-        @media (hover: hover) { .back-btn:hover { background: rgba(0,0,0,0.5); } }
+        .back-btn:active { transform: scale(0.9); }
+        @media (hover: hover) { .back-btn:hover { transform: translateY(-2px); } }
 
         .header-content {
             position: absolute;
-            bottom: 84px;
+            bottom: 24px;
             left: 20px;
             right: 20px;
             text-align: left;
-            color: white;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+            color: #fff;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
             animation: fadeIn 0.8s var(--ease-out) backwards;
         }
 
         h1 {
             margin: 0;
             font-size: clamp(1.9rem, 7vw, 2.4rem);
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-            font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.25;
         }
 
         .subtitle {
-            font-weight: 600;
-            opacity: 0.92;
-            margin-top: 8px;
-            font-size: 1.05rem;
+            font-weight: 700;
+            opacity: 0.95;
+            margin-top: 6px;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -150,23 +150,22 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--paper);
+            color: var(--ink);
             padding: 10px 18px;
-            border-radius: 30px;
-            margin-top: 18px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.45);
+            border-radius: 6px;
+            border: 1.5px dashed var(--vermillion);
+            margin-top: 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
             text-decoration: none;
-            color: white;
-            transition: transform 0.2s var(--ease-out), background 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-shadow: none;
+            transition: transform 0.2s var(--ease-out);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
             max-width: 100%;
         }
-        .hotel-pill:active { transform: scale(0.96); background: rgba(255, 255, 255, 0.4); }
-        @media (hover: hover) { .hotel-pill:hover { background: rgba(255, 255, 255, 0.35); } }
+        .hotel-pill:active { transform: scale(0.96); }
+        @media (hover: hover) { .hotel-pill:hover { transform: translateY(-2px); } }
 
         /* ===== 置頂日期導覽 ===== */
         .day-nav {
@@ -174,11 +173,11 @@
             top: 0;
             z-index: 50;
             background: var(--nav-bg);
-            backdrop-filter: blur(20px) saturate(1.6);
-            -webkit-backdrop-filter: blur(20px) saturate(1.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--line);
-            margin: 24px -20px 22px;
-            padding: 10px max(20px, env(safe-area-inset-left));
+            margin: 0 -20px 24px;
+            padding: 12px max(20px, env(safe-area-inset-left));
             display: flex;
             gap: 8px;
             overflow-x: auto;
@@ -189,23 +188,23 @@
 
         .day-chip {
             flex-shrink: 0;
-            border: 1px solid var(--line);
-            background: var(--chip-bg);
-            color: var(--text-main);
+            border: 1.5px solid var(--line);
+            background: var(--paper);
+            color: var(--ink);
             font: inherit;
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             font-weight: 700;
             padding: 8px 15px;
-            border-radius: 20px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.25s ease, color 0.25s ease, transform 0.2s var(--ease-out);
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s var(--ease-out);
         }
         .day-chip:active { transform: scale(0.94); }
         .day-chip.active {
-            background: var(--primary);
-            border-color: var(--primary);
+            background: var(--vermillion);
+            border-color: var(--vermillion);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+            box-shadow: 0 4px 12px rgba(196, 69, 60, 0.4);
         }
 
         /* ===== 快速工具列 ===== */
@@ -218,19 +217,18 @@
 
         .action-btn {
             flex: 1;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            color: var(--primary);
+            background: var(--paper);
+            color: var(--ink);
             padding: 14px 8px;
-            border-radius: 18px;
+            border-radius: 12px;
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.88rem;
+            font-weight: 700;
             text-align: center;
             box-shadow: var(--shadow-card);
+            border: 1px solid var(--line);
+            border-bottom: 3px solid var(--vermillion);
             transition: transform 0.2s var(--ease-out), box-shadow 0.2s ease;
-            border: var(--glass-border);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -243,40 +241,53 @@
         .action-btn span { font-size: 1.5rem; line-height: 1; }
         .action-btn:active { transform: scale(0.95); }
         @media (hover: hover) {
-            .action-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -10px rgba(20, 30, 60, 0.22); }
+            .action-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -10px rgba(46, 42, 37, 0.28); }
         }
 
-        /* ===== 提醒卡 ===== */
+        /* ===== 提醒卡：貼在手帳上的便條 ===== */
         .alert-card {
-            background: rgba(255, 45, 85, 0.09);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 18px 20px;
-            margin-bottom: 26px;
-            color: var(--secondary);
-            border: 1px solid rgba(255, 45, 85, 0.22);
-            box-shadow: 0 10px 25px -12px rgba(255, 45, 85, 0.35);
+            position: relative;
+            background: var(--paper);
+            border: 2px dashed var(--vermillion);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 28px;
+            color: var(--vermillion);
+            transform: rotate(-0.6deg);
+            box-shadow: var(--shadow-card);
             animation: slideUp 0.55s var(--ease-out) 0.2s backwards;
         }
-        .alert-title { font-weight: 800; margin-bottom: 8px; font-size: 1.05rem; }
-        .alert-body { font-size: 0.95rem; opacity: 0.92; line-height: 1.5; }
+        /* 紙膠帶 */
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            width: 90px;
+            height: 24px;
+            background: var(--vermillion);
+            opacity: 0.5;
+            transform: translateX(-50%) rotate(-2deg);
+            border-radius: 2px;
+        }
+        .alert-title { font-weight: 700; margin-bottom: 8px; font-size: 1.05rem; }
+        .alert-body { font-size: 0.95rem; line-height: 1.5; color: var(--ink); }
+        .alert-body strong { color: var(--vermillion); }
 
         /* ===== 每日卡片 ===== */
         details {
-            background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 24px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--vermillion);
+            border-radius: 14px;
             margin-bottom: 16px;
             box-shadow: var(--shadow-card);
             overflow: hidden;
-            border: var(--glass-border);
             animation: slideUp 0.6s var(--ease-out) backwards;
             scroll-margin-top: 76px; /* 避免捲動定位被置頂導覽遮住 */
             transition: box-shadow 0.3s ease;
         }
-        details[open] { box-shadow: 0 18px 40px -14px rgba(20, 30, 60, 0.2); }
+        details[open] { box-shadow: 0 16px 36px -12px rgba(46, 42, 37, 0.28); }
 
         details:nth-of-type(1) { animation-delay: 0.25s; }
         details:nth-of-type(2) { animation-delay: 0.32s; }
@@ -294,31 +305,46 @@
         details[open]::details-content { block-size: auto; }
 
         summary {
-            padding: 20px 22px;
+            padding: 18px 20px;
             cursor: pointer;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             list-style: none;
             position: relative;
             transition: background 0.2s;
         }
-        summary:active { background-color: rgba(0,0,0,0.05); }
+        summary:active { background-color: rgba(0,0,0,0.04); }
         summary::-webkit-details-marker { display: none; }
 
-        .day-header { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+        /* 朱印風的日次章 */
+        .day-stamp {
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px double var(--vermillion);
+            border-radius: 10px;
+            color: var(--vermillion);
+            background: var(--vermillion-soft);
+            font-size: 1.05rem;
+            font-weight: 700;
+            transform: rotate(-6deg);
+            letter-spacing: 1px;
+        }
+
+        .day-header { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
         .day-title {
-            font-size: 1.18rem;
-            font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: -0.3px;
-            font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+            font-size: 1.14rem;
+            font-weight: 700;
+            color: var(--ink);
             line-height: 1.35;
         }
         .day-date {
             font-size: 0.85rem;
-            color: var(--text-sub);
+            color: var(--sub);
             font-weight: 700;
             letter-spacing: 0.5px;
         }
@@ -329,22 +355,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 34px;
-            height: 34px;
-            background: rgba(0,0,0,0.05);
+            width: 32px;
+            height: 32px;
+            border: 1.5px solid var(--line);
+            background: transparent;
             border-radius: 50%;
-            font-size: 1.15rem;
-            color: var(--text-sub);
+            font-size: 1.05rem;
+            color: var(--sub);
             transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 700;
         }
-        @media (prefers-color-scheme: dark) { summary::after { background: rgba(255,255,255,0.1); } }
 
-        details[open] summary::after { transform: rotate(180deg); background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4); }
+        details[open] summary::after {
+            transform: rotate(180deg);
+            background: var(--vermillion);
+            border-color: var(--vermillion);
+            color: #fff;
+        }
 
-        .day-content { padding: 6px 24px 28px 24px; }
+        .day-content { padding: 4px 22px 26px 22px; }
 
-        /* ===== 時間軸 ===== */
+        /* ===== 時間軸：鐵道路線風 ===== */
         .timeline { position: relative; padding-left: 30px; }
         .timeline::before {
             content: '';
@@ -352,74 +383,67 @@
             left: 7px;
             top: 12px;
             bottom: 6px;
-            width: 3px;
-            background: linear-gradient(to bottom, var(--primary) 0%, var(--line) 65%);
-            opacity: 0.35;
-            border-radius: 3px;
+            width: 0;
+            border-left: 2px dashed var(--vermillion);
+            opacity: 0.4;
         }
 
-        .event { margin-bottom: 30px; position: relative; }
-        .event:last-child { margin-bottom: 8px; }
+        .event { margin-bottom: 28px; position: relative; }
+        .event:last-child { margin-bottom: 6px; }
 
+        /* 車站環狀節點 */
         .event-dot {
             position: absolute;
             left: -29px;
             top: 3px;
-            width: 16px;
-            height: 16px;
-            background: var(--primary);
-            border: 3px solid var(--card-bg);
+            width: 15px;
+            height: 15px;
+            background: var(--paper);
+            border: 3.5px solid var(--vermillion);
             border-radius: 50%;
             z-index: 2;
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
-        }
-        /* 只讓每張卡的第一個節點呼吸閃爍，減少視覺噪音 */
-        .event:first-child .event-dot { animation: pulse 3s infinite ease-in-out; }
-        @keyframes pulse {
-            0%   { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
-            70%  { box-shadow: 0 0 0 8px rgba(0, 122, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
         }
 
         .time {
             display: inline-block;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            color: var(--primary);
-            background: var(--primary-soft);
-            padding: 3px 10px;
-            border-radius: 12px;
+            color: #fff;
+            background: var(--vermillion);
+            padding: 3px 11px;
+            border-radius: 4px;
             margin-bottom: 8px;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             font-variant-numeric: tabular-nums;
         }
 
-        .activity { font-size: 1.08rem; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
-        .note { font-size: 0.95rem; color: var(--text-sub); line-height: 1.7; }
+        .activity { font-size: 1.06rem; font-weight: 700; margin-bottom: 6px; line-height: 1.45; }
+        .note { font-size: 0.94rem; color: var(--sub); line-height: 1.75; }
 
         .map-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: var(--primary-soft);
-            color: var(--primary);
+            background: transparent;
+            color: var(--vermillion);
+            border: 1.5px solid var(--vermillion);
             text-decoration: none;
-            padding: 9px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.84rem;
+            font-weight: 700;
             margin-top: 10px;
             margin-right: 6px;
-            transition: transform 0.2s var(--ease-out), background 0.2s ease;
+            transition: transform 0.2s var(--ease-out), background 0.2s ease, color 0.2s ease;
         }
-        .map-btn:active { transform: scale(0.96); background: rgba(0, 122, 255, 0.22); }
-        @media (hover: hover) { .map-btn:hover { background: rgba(0, 122, 255, 0.18); } }
+        .map-btn:active { transform: scale(0.96); }
+        @media (hover: hover) { .map-btn:hover { background: var(--vermillion); color: #fff; } }
 
-        .highlight { color: var(--secondary); font-weight: 800; }
+        .highlight { color: var(--vermillion); font-weight: 700; }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(28px) scale(0.98); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -447,7 +471,7 @@
     </div>
 </header>
 
-<div class="container" style="margin-top: -40px;">
+<div class="container">
 
     <nav class="day-nav" aria-label="行程日期導覽">
         <button class="day-chip active" data-target="day1">Day 1</button>
@@ -477,6 +501,7 @@
 
     <details id="day1" open>
         <summary>
+            <span class="day-stamp">01</span>
             <div class="day-header">
                 <span class="day-title">Day 1 小晴任之旅第一天！</span>
                 <span class="day-date">1/9 (五)</span>
@@ -517,6 +542,7 @@
 
     <details id="day2">
         <summary>
+            <span class="day-stamp">02</span>
             <div class="day-header">
                 <span class="day-title">Day 2 去鎌倉囉！</span>
                 <span class="day-date">1/10 (六)</span>
@@ -572,6 +598,7 @@
 
     <details id="day3">
         <summary>
+            <span class="day-stamp">03</span>
             <div class="day-header">
                 <span class="day-title">Day 3 渉谷呆呆獸尋根之旅~</span>
                 <span class="day-date">1/11 (日)</span>
@@ -613,6 +640,7 @@
 
     <details id="day4">
         <summary>
+            <span class="day-stamp">04</span>
             <div class="day-header">
                 <span class="day-title">Day 4 富士山！</span>
                 <span class="day-date">1/12 (一)</span>
@@ -621,8 +649,8 @@
         <div class="day-content">
             <div class="timeline">
                 <div class="event">
-                    <div class="event-dot" style="background: var(--secondary); box-shadow: 0 2px 8px rgba(255, 45, 85, 0.4);"></div>
-                    <span class="time" style="color: var(--secondary); background: rgba(255, 45, 85, 0.1);">⚠️ 日本國定假日</span>
+                    <div class="event-dot" style="border-color: var(--gold);"></div>
+                    <span class="time" style="background: var(--gold);">⚠️ 日本國定假日</span>
                     <div class="activity">成人之日 (人潮預警)</div>
                 </div>
                 <div class="event">
@@ -660,6 +688,7 @@
 
     <details id="day5">
         <summary>
+            <span class="day-stamp">05</span>
             <div class="day-header">
                 <span class="day-title">Day 5 迪士尼樂園</span>
                 <span class="day-date">1/13 (二)</span>
@@ -695,6 +724,7 @@
 
     <details id="day6">
         <summary>
+            <span class="day-stamp">06</span>
             <div class="day-header">
                 <span class="day-title">Day 6 開心回家囉！</span>
                 <span class="day-date">1/14 (三)</span>
